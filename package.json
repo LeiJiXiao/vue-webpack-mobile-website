@@ -1,0 +1,16 @@
+{
+  "name": "mobile-website",
+  "version": "1.0.0",
+  "description": "my-mobile-website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vue",
+    "+",
+    "webpack"
+  ],
+  "author": "LeiJiXiao",
+  "license": "ISC"
+}
