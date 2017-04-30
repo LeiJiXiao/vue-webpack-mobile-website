@@ -7,7 +7,7 @@ module.exports = webpackMerge( webpackCommon, {
     devtool: "source-map",
     output: {
         path: webpackUtil.roots( "dist" ),
-        //publicPath: "/",
+        publicPath: "/",
         filename: `js/[name].js`
     },
     devServer: {

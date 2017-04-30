@@ -1,0 +1,26 @@
+div{
+  position:relative;
+}
+.a{
+  color:#ff4d51;
+}
+.main{
+  margin-top:100px;
+  box-sizing: border-box;
+  //background: url(../../images/fendou.gif) no-repeat center;
+  //background-size:cover;
+  h1{
+    margin-bottom:30px;
+    text-align: center;
+    font-size:50px;
+    background-size:cover;
+    @extend .a;
+  }
+  .btn{
+    text-align: center;
+  }
+}
+img{
+  display: block;
+  margin: 0 auto;
+}

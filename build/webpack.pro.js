@@ -3,12 +3,13 @@ const webpack = require( "webpack" );
 const webpackMerge = require( "webpack-merge" );
 const webpackUtil = require( "./webpack.util" );
 const webpackCommon = require( "./webpack.common" );
+const ImageminPlugin = require( 'imagemin-webpack-plugin' ).default;
 
 module.exports = webpackMerge( webpackCommon, {
     devtool: "source-map",
     output: {
         path: webpackUtil.roots( "dist" ),
-        publicPath: "./",
+        publicPath: "/",
         filename: "js/[name].[hash].js"
     },
     plugin: [
@@ -20,6 +21,15 @@ module.exports = webpackMerge( webpackCommon, {
             },
             sourceMap: true,//可以在线上生成soucemap文件，便于调试
             mangle: true
+        } ),
+        new ImageminPlugin( {
+            test: 'images/**',
+            pngquant: {
+                quality: '60-90'
+            },
+            gifsicle: {
+                optimizationLevel: 3
+            }
         } )
     ]
 } );

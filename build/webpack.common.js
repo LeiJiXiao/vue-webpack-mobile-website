@@ -38,7 +38,8 @@ module.exports = {
         extensions: [ ".scss", ".js", ".vue" ],
         alias: {
             //npm中安装vue默认为运行时构建，故不能使用template模板，此配置修改运行时构建。
-            "vue$": "vue/dist/vue.common.js"
+            "vue$": "vue/dist/vue.common.js",
+            '@': webpackUtil.roots( 'src' )
         }
     },
     module: {
@@ -50,19 +51,21 @@ module.exports = {
                         loader: "url-loader",
                         options: {
                             limit: 10000,
-                            name: webpackUtil.roots( "src/theme-default/fonts/[name].[ext]" )
+                            name: "fonts/[name].[hash:8].[ext]"
                         }
                     }
                 ]
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+                include: webpackUtil.roots( 'src/images' ),
                 use: [
                     {
                         loader: "url-loader",
                         options: {
                             limit: 10000,
-                            name: webpackUtil.roots( "src/images/[name].[ext]" )
+                            name: 'images/[name].[hash:8].[ext]'
+                            //name指定生成后的文件夹，（dist目录下面）
                         }
                     }
                 ]
@@ -74,7 +77,7 @@ module.exports = {
                     {
                         loader: "css-loader",
                         options: {
-                            importLoaders: 2
+                            importLoaders: 1
                         }
                     },
                     "postcss-loader",
@@ -86,13 +89,7 @@ module.exports = {
                 exclude: /node_modules/,
                 use: [
                     {
-                        loader: "babel-loader",
-                        options: {
-                            presets: [
-                                "es2015",
-                                "stage-0"
-                            ]
-                        }
+                        loader: "babel-loader"
                     }
                 ]
             },
@@ -104,7 +101,7 @@ module.exports = {
                         options: {
                             loaders: {
                                 css: ExtractTextPlugin.extract( [
-                                    "css-loader","postcss-loader"
+                                    "css-loader"
                                 ] ),
                                 sass: ExtractTextPlugin.extract( [
                                     "css-loader","postcss-loader","sass-loader"
@@ -139,4 +136,4 @@ module.exports = {
             new ExtractTextPlugin( "stylesheets/[name].css" ) :
             new ExtractTextPlugin( "stylesheets/[name].[hash].css" )
     ].concat( views )
-}
+};

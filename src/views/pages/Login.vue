@@ -1,5 +1,6 @@
 <template>
     <div class="main">
+        <img src="../../images/fendou.gif"/>
         <h1>{{title}}</h1>
         <div class="loginArea">
             <el-form :model="loginValidateForm" ref="loginValidateForm" :rules="loginValidateRule" :loading="loading" element-loading-text="Loading..." label-width="130px" label-position="top">
@@ -78,8 +79,6 @@
         }
     }
 </script>
-<style lang="sass">
-    @import "../sass/resetH5.scss";
-    @import '../theme-default/index.css';
-    @import "../sass/index.scss";
+<style lang="sass" scoped>
+    @import "../../sass/login.scss";
 </style>
