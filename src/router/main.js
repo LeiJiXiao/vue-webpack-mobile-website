@@ -5,8 +5,6 @@ import VueRouter from "vue-router";
  * 导入页面
  */
 import Index from "@/views/pages/Index";
-import Login from "@/views/pages/Login";
-import Timer from "@/views/pages/Timer";
 
 Vue.use( VueRouter );
 
@@ -15,18 +13,19 @@ const router = new VueRouter( {
     routes:[
         {
             name: "index",
-            path: "/index",
+            path: "/",
             component: Index
         },
         {
             name: 'login',
             path: '/login',
-            component: Login
+            component: () => import ( '@/views/pages/Login' )
+            //r => require.ensure( [], () => r( require( '@/views/pages/Login' ) ), 'chunkname1' )
         },
         {
             name: 'timer',
             path: '/timer',
-            component: Timer
+            component: () => import ( '@/views/pages/Timer' )
         }
     ]
 } );

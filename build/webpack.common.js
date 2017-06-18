@@ -11,7 +11,7 @@ let views = [];
  *
  * @type 入口文件处理
  */
-entrys[ "vendor" ] = [ "vue", "vue-router", "vuex", "element-ui" ];
+entrys[ "vendor" ] = [ "vue", "vue-router", "vuex", "axios", "element-ui" ];
 for( let i = 0; i < files.length; i++ ){
     /**
      *
@@ -133,7 +133,13 @@ module.exports = {
                 filename: "vendor.[hash].js"
             } ),
         process.env.NODE_ENV === 'develop' ?
-            new ExtractTextPlugin( "stylesheets/[name].css" ) :
-            new ExtractTextPlugin( "stylesheets/[name].[hash].css" )
+            new ExtractTextPlugin( {
+                filename: "stylesheets/[name].css",
+                allChunks: true //true从所有其他的块中提取,默认情况下，它只从初始块中提取(按需加载的情况需要注意)
+            } ) :
+            new ExtractTextPlugin( {
+                filename: "stylesheets/[name].[hash].css",
+                allChunks: true
+            } )
     ].concat( views )
 };

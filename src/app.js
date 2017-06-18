@@ -1,6 +1,7 @@
 import Vue from "vue";
 import axios from "axios";
 import ElementUi from "element-ui";
+
 import { router, PAGE_TITLE } from "@/router/main";
 import { store } from "@/store/main";
 import App from '@/views/App';

@@ -11,6 +11,7 @@ module.exports = webpackMerge( webpackCommon, {
         filename: `js/[name].js`
     },
     devServer: {
+        open: true,
         historyApiFallback: true,
         stats: 'minimal'
     }

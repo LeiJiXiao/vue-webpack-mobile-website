@@ -26,7 +26,7 @@
   left: 50%;
   transform: translateX(-50%);
   transform: translateX(-50%);
-  animation: show2 60s steps(60) infinite;
+  animation: show2 3600s steps(60) infinite;
   transform-origin:top;
 }
 .son3{
@@ -38,7 +38,7 @@
   top: 50%;
   left: 50%;
   transform: translateX(-50%);
-  animation: show 80s steps(30) infinite;
+  animation: show 60s steps(30) infinite;
   transform-origin:top;
 }
 .son4{
