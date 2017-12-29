@@ -1,30 +1,29 @@
 const webpack = require( "webpack" );
 const webpackUtil = require( "./webpack.util" );
 const htmlWebpackPlugin = require( "html-webpack-plugin" );
-const ExtractTextPlugin = require( "extract-text-webpack-plugin" );
 const autoprefixer = require( "autoprefixer" );
 let files = [ "index" ];
 let entrys = {};
 let views = [];
-
 /**
  *
  * @type 入口文件处理
  */
-entrys[ "vendor" ] = [ "vue", "vue-router", "vuex", "axios", "element-ui" ];
+//entrys[ 'babel-polyfill' ] = 'babel-polyfill';
 for( let i = 0; i < files.length; i++ ){
     /**
      *
      * main-html生成
      */
-    let arr = [ files[ i ], "vendor" ];
+    //let arr = [ "manifest", files[ i ], "vendor" ];
     views.push( new htmlWebpackPlugin( {
         template: `./${ files[ i ] }.html`,
         filename: `${ files[ i ] }.html`,
         /**
          * 生成的页面加入第三方依赖库
          */
-        chunks: arr
+        //chunks: arr
+        chunksSortMode: 'dependency'
     } ) );
     /**
      * 入口js配置
@@ -38,8 +37,10 @@ module.exports = {
         extensions: [ ".scss", ".js", ".vue" ],
         alias: {
             //npm中安装vue默认为运行时构建，故不能使用template模板，此配置修改运行时构建。
-            "vue$": "vue/dist/vue.common.js",
-            '@': webpackUtil.roots( 'src' )
+            "vue$": "vue/dist/vue.js",
+            '@': webpackUtil.roots( 'src' ),
+            'Axios': webpackUtil.roots( 'src/lib/Axios.js' ),
+            'Util': webpackUtil.roots( 'src/lib/Util.js' )
         }
     },
     module: {
@@ -55,10 +56,10 @@ module.exports = {
                         }
                     }
                 ]
-            },
-            {
+            }, {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 include: webpackUtil.roots( 'src/images' ),
+                exclude: /node_modules/,
                 use: [
                     {
                         loader: "url-loader",
@@ -69,22 +70,7 @@ module.exports = {
                         }
                     }
                 ]
-            },
-            {
-                test: /\.scss$/,
-                include: webpackUtil.roots( "src/sass" ),
-                use: ExtractTextPlugin.extract( [
-                    {
-                        loader: "css-loader",
-                        options: {
-                            importLoaders: 1
-                        }
-                    },
-                    "postcss-loader",
-                    "sass-loader"
-                ] )
-            },
-            {
+            }, {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: [
@@ -92,28 +78,33 @@ module.exports = {
                         loader: "babel-loader"
                     }
                 ]
-            },
-            {
-                test: /\.vue$/,
-                use: [
-                    {
-                        loader: "vue-loader",
-                        options: {
-                            loaders: {
-                                css: ExtractTextPlugin.extract( [
-                                    "css-loader"
-                                ] ),
-                                sass: ExtractTextPlugin.extract( [
-                                    "css-loader","postcss-loader","sass-loader"
-                                ] )
-                            }
-                        }
-                    }
-                ]
             }
         ]
     },
     plugins: [
+        /*new webpack.ProvidePlugin( {
+         $: 'jquery'
+         } ),*/
+        new webpack.optimize.CommonsChunkPlugin( {
+            name: 'vendor',
+            minChunks ( module, count ) {
+                // any required modules inside node_modules are extracted to vendor
+                return (
+                    module.resource &&
+                    /\.js$/.test( module.resource ) &&
+                    ( module.resource.indexOf(
+                        webpackUtil.roots( 'node_modules' )
+                    ) === 0 ||
+                    module.resource.indexOf(
+                        webpackUtil.roots( 'src/lib' )
+                    ) === 0 )
+                )
+            }
+        } ),
+        new webpack.optimize.CommonsChunkPlugin( {
+            name: 'manifest',
+            chunks: [ 'vendor' ]
+        } ),
         new webpack.LoaderOptionsPlugin( {
             options: {
                 postcss(){
@@ -122,24 +113,6 @@ module.exports = {
                     ]
                 }
             }
-        } ),
-        process.env.NODE_ENV === 'develop' ?
-            new webpack.optimize.CommonsChunkPlugin( {
-                name: "vendor",
-                filename: "vendor.js"
-            } ) :
-            new webpack.optimize.CommonsChunkPlugin( {
-                name: "vendor",
-                filename: "vendor.[hash].js"
-            } ),
-        process.env.NODE_ENV === 'develop' ?
-            new ExtractTextPlugin( {
-                filename: "stylesheets/[name].css",
-                allChunks: true //true从所有其他的块中提取,默认情况下，它只从初始块中提取(按需加载的情况需要注意)
-            } ) :
-            new ExtractTextPlugin( {
-                filename: "stylesheets/[name].[hash].css",
-                allChunks: true
-            } )
+        } )
     ].concat( views )
 };
